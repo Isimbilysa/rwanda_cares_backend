@@ -9,13 +9,15 @@ generator client {
 
 model User {
   id         Int      @id @default(autoincrement())
-  name       String
+  firstname  String
+  lastname   String
   email      String   @unique
   password   String
   role       Role     @default(VOLUNTEER)
   skills     String[] @default([])
   interests  String[] @default([])
   location   String?
+  verificationToken String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   participations VolunteerParticipation[]
