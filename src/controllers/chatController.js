@@ -1,3 +1,4 @@
+// src/controllers/chatController.js
 require("dotenv").config();
 const axios = require("axios");
 
@@ -6,11 +7,10 @@ async function handleChat(req, res) {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: "Message is required." });
 
+    // Call the hosted Hugging Face DialoGPT-medium model
     const response = await axios.post(
-      "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
-      {
-        inputs: message,
-      },
+      "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
+      { inputs: message },
       {
         headers: {
           Authorization: `Bearer ${process.env.HF_API_KEY}`,
@@ -19,9 +19,8 @@ async function handleChat(req, res) {
       }
     );
 
-    const reply =
-      response.data?.[0]?.generated_text ||
-      "Sorry, I couldn't generate a reply.";
+    // Hugging Face returns an array of generated responses
+    const reply = response.data?.[0]?.generated_text || "Sorry, I couldn't generate a reply.";
 
     res.json({ reply });
   } catch (error) {

@@ -7,17 +7,14 @@ const { AppError } = require('../utils/appError');
 const prisma = new PrismaClient();
 
 class AuthController {
-  // Register new user
   register = async (req, res, next) => {
     try {
       const { email, password, firstname, lastname, role } = req.body;
 
-      // Validate required fields
       if (!email || !password || !firstname || !lastname) {
         throw new AppError('Email, password, firstname, and lastname are required', 400);
       }
 
-      // Check if user already exists
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) throw new AppError('User already exists with this email', 400);
 
